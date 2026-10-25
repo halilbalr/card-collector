@@ -1,0 +1,33 @@
+{
+  "category": "Pokemon",
+  "id": "sv03.5-199",
+  "illustrator": "takuyoa",
+  "image": "https://assets.tcgdex.net/en/sv/sv03.5/199",
+  "localId": "199",
+  "name": "Charizard ex",
+  "rarity": "Special illustration rare",
+  "set": {
+    "cardCount": { "official": 165, "total": 207 },
+    "id": "sv03.5",
+    "logo": "https://assets.tcgdex.net/en/sv/sv03.5/logo",
+    "name": "151",
+    "symbol": "https://assets.tcgdex.net/univ/sv/sv03.5/symbol"
+  },
+  "variants": { "firstEdition": false, "holo": true, "normal": false, "reverse": false, "wPromo": false },
+  "hp": 330,
+  "types": ["Fire"],
+  "stage": "Stage2",
+  "pricing": {
+    "cardmarket": {
+      "updated": "2026-10-24T00:42:15.000Z",
+      "unit": "EUR",
+      "avg": 189.5, "low": 160, "trend": 192.3, "avg1": 199, "avg7": 194.2, "avg30": 181.7,
+      "avg-holo": null, "low-holo": null, "trend-holo": null
+    },
+    "tcgplayer": {
+      "updated": "2026-10-24T00:42:15.000Z",
+      "unit": "USD",
+      "holofoil": { "productId": 517045, "lowPrice": 210, "midPrice": 245.5, "highPrice": 499.99, "marketPrice": 238.12, "directLowPrice": null }
+    }
+  }
+}

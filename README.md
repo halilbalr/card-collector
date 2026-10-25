@@ -1,5 +1,11 @@
 # Card Collector
 
+> **Nytt: [Kortkollen](./kortkollen/README.md)** – en installerbar mobilapp (PWA) i mappen
+> `kortkollen/` för att skanna Pokémonkort, se värdet ograderat och i alla graderingar
+> (PSA/BGS/CGC/SGC), göra en graderingskoll och hålla koll på samlingen. Den körs helt i
+> webbläsaren och behöver varken App Store eller server.
+
+
 - Live Site URL: [Card Collector](https://card-collector.onrender.com)
 
 ## Summary:
