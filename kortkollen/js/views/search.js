@@ -8,8 +8,9 @@ import { getState, addSearch, clearSearches, itemsFor, cardKey } from '../store.
 import { cardPriceLabel } from '../format.js';
 import { cardTile } from '../components/card-tile.js';
 import { remember } from '../session.js';
+import { DEMO, DEMO_NAMES } from '../demo.js';
 
-const POPULAR = ['Charizard', 'Pikachu', 'Umbreon', 'Mew', 'Lugia', 'Rayquaza', 'Gengar', 'Eevee'];
+const POPULAR = DEMO ? DEMO_NAMES : ['Charizard', 'Pikachu', 'Umbreon', 'Mew', 'Lugia', 'Rayquaza', 'Gengar', 'Eevee'];
 
 /** Sheet listing every set, filterable. Calls onPick(set). */
 export function pickSet(onPick) {
@@ -164,7 +165,7 @@ export function render(route) {
       h(
         'section',
         { class: 'section' },
-        sectionHead('Populära'),
+        sectionHead(DEMO ? 'Kort i demon' : 'Populära'),
         h('div', { class: 'chips chips--wrap' }, POPULAR.map((s) => h('button', { class: 'chip', onClick: () => ((input.value = s), onInput(true)) }, s))),
       ),
       h('section', { class: 'section' }, sectionHead('Nyaste seten'), sets),

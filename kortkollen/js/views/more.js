@@ -10,8 +10,20 @@ import { applyApiSettings, refreshRates } from '../actions.js';
 import { money } from '../format.js';
 import { session } from '../session.js';
 import { newBinderChip } from '../components/item-sheet.js';
+import { DEMO } from '../demo.js';
 
-function download(name, text, type) {
+async function download(name, text, type) {
+  // Inside a sandboxed preview, plain download links do nothing; use the host's save dialog.
+  const downloads = await window.claude?.use?.('downloads');
+  if (downloads) {
+    try {
+      await downloads.save({ filename: name, data: text });
+      toast('Filen sparad', { type: 'ok' });
+    } catch {
+      toast('Filen sparades inte', { type: 'error' });
+    }
+    return;
+  }
   const blob = new Blob([text], { type });
   const url = URL.createObjectURL(blob);
   const a = h('a', { href: url, download: name });
@@ -19,6 +31,7 @@ function download(name, text, type) {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
+  toast('Filen sparad', { type: 'ok' });
 }
 
 const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -43,6 +56,21 @@ export function installHelp() {
         : h('ol', { class: 'install-steps' }, step(1, 'Öppna sidan i Chrome.'), step(2, 'Tryck på menyn ⋮ uppe till höger.'), step(3, 'Välj "Installera app" eller "Lägg till på startskärmen".')),
     ),
   });
+}
+
+/** Explains what the demo build can and cannot do. */
+export function demoNotice() {
+  return h(
+    'div',
+    { class: 'banner banner--demo' },
+    icon('info', { size: 20 }),
+    h(
+      'span',
+      {},
+      h('b', {}, 'Demoläge. '),
+      'Här visas ett litet urval exempelkort med exempelpriser, eftersom förhandsvisningen inte når kortdatabasen. Publicera appen på GitHub Pages för alla kort och riktiga priser.',
+    ),
+  );
 }
 
 export function render() {
@@ -225,7 +253,9 @@ export function render() {
     mount(
       el,
       h('header', { class: 'page-head' }, h('h1', { class: 'page-title' }, 'Mer')),
-      !isStandalone() &&
+      DEMO && demoNotice(),
+      !DEMO &&
+        !isStandalone() &&
         h(
           'button',
           { class: 'install-card', onClick: installHelp },
@@ -282,7 +312,7 @@ export function render() {
       group(
         'Samling',
         row({ iconName: 'folder', label: 'Pärmar', value: String(st.binders.length), onClick: bindersSheet }),
-        row({ iconName: 'download', label: 'Säkerhetskopiera (JSON)', onClick: () => (download(`kortkollen-${new Date().toISOString().slice(0, 10)}.json`, exportJSON(), 'application/json'), toast('Säkerhetskopia sparad', { type: 'ok' })) }),
+        row({ iconName: 'download', label: 'Säkerhetskopiera (JSON)', onClick: () => download(`kortkollen-${new Date().toISOString().slice(0, 10)}.json`, exportJSON(), 'application/json') }),
         row({ iconName: 'upload', label: 'Återställ från säkerhetskopia', onClick: importFile }),
         row({ iconName: 'list', label: 'Exportera till Excel (CSV)', onClick: () => download(`kortkollen-${new Date().toISOString().slice(0, 10)}.csv`, exportCSV(), 'text/csv;charset=utf-8') }),
       ),

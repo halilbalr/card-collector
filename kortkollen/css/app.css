@@ -1333,6 +1333,21 @@ a.row:active,
   flex: 1;
 }
 
+.banner--demo {
+  margin: 0 0 14px;
+  align-items: flex-start;
+  font-weight: 450;
+  font-size: 14px;
+  background: var(--grad-soft);
+  color: var(--text);
+}
+
+.banner--demo .icon {
+  flex: none;
+  margin-top: 1px;
+  color: var(--accent-text);
+}
+
 .banner--good {
   background: var(--good-bg);
   color: var(--good);

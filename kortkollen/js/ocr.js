@@ -4,6 +4,7 @@
 
 import { crop, prepareForOcr, OCR_REGIONS, regionRect } from './vision.js';
 import { parseNumber, parseName } from './ocr-parse.js';
+import { DEMO } from './demo.js';
 
 const TESSERACT_URL = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
 
@@ -32,9 +33,14 @@ export function onOcrProgress(fn) {
 export function loadOcr() {
   if (!workerPromise) {
     workerPromise = (async () => {
-      await loadScript(TESSERACT_URL);
+      // Demo mode runs where only the page's own files can be fetched, so the
+      // engine, its core and the language data are published alongside it,
+      // behind a small worker wrapper (vendor/tesseract/kk-worker.js).
+      const local = DEMO ? new URL('vendor/tesseract', location.href).href : null;
+      await loadScript(local ? `${local}/tesseract.min.js` : TESSERACT_URL);
       return window.Tesseract.createWorker('eng', 1, {
         logger: (m) => listeners.forEach((fn) => fn(m)),
+        ...(local ? { workerPath: `${local}/kk-worker.js`, workerBlobURL: false, corePath: local, langPath: local } : {}),
       });
     })().catch((err) => {
       workerPromise = null;

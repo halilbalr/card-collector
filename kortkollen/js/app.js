@@ -6,6 +6,7 @@ import { icon } from './icons.js';
 import { getState, update, subscribe, flush } from './store.js';
 import { applyApiSettings, autoRefresh } from './actions.js';
 import { pruneCache } from './api.js';
+import { DEMO } from './demo.js';
 import { session } from './session.js';
 import * as home from './views/home.js';
 import * as search from './views/search.js';
@@ -81,7 +82,10 @@ function onRoute(r) {
 
 function applyTheme() {
   const theme = getState().settings.theme;
-  if (theme === 'auto') document.documentElement.removeAttribute('data-theme');
+  // In demo mode the host page may set data-theme itself; leave it alone on "auto".
+  if (theme === 'auto') {
+    if (!DEMO) document.documentElement.removeAttribute('data-theme');
+  }
   else document.documentElement.dataset.theme = theme;
   const dark = theme === 'dark' || (theme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0b0d14' : '#f4f5fa');
@@ -123,7 +127,7 @@ function onboarding() {
 }
 
 function registerServiceWorker() {
-  if (!('serviceWorker' in navigator) || location.protocol === 'file:') return;
+  if (DEMO || !('serviceWorker' in navigator) || location.protocol === 'file:') return;
   // Reload only when the user asked for the update – not when the very first
   // service worker takes control of the page.
   let updating = false;

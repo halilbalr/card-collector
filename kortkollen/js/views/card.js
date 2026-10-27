@@ -13,6 +13,7 @@ import { holoCard } from '../components/holo.js';
 import { slab, gradeNumber } from '../components/slab.js';
 import { openItemSheet } from '../components/item-sheet.js';
 import { session, remember } from '../session.js';
+import { DEMO } from '../demo.js';
 
 const SOURCE_LABEL = { cardmarket: 'Cardmarket trend', tcgplayer: 'TCGplayer market' };
 
@@ -146,7 +147,7 @@ export function render(route) {
       h(
         'div',
         { class: 'price-panel__src muted' },
-        raw ? `${SOURCE_LABEL[raw.source]} (${raw.currency})${updated ? ` · uppdaterat ${updated}` : ''}` : 'Ingen prisdata för den här varianten ännu.',
+        raw ? `${DEMO ? 'Exempelpris i demoläget' : SOURCE_LABEL[raw.source]} (${raw.currency})${updated && !DEMO ? ` · uppdaterat ${updated}` : ''}` : 'Ingen prisdata för den här varianten ännu.',
       ),
       minis.length > 0 && h('div', { class: 'minis' }, minis.slice(0, 3).map(([l, v]) => h('div', { class: 'mini' }, h('span', {}, l), h('b', {}, v)))),
     );

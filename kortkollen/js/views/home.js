@@ -11,6 +11,8 @@ import { areaChart } from '../components/chart.js';
 import { cardTile } from '../components/card-tile.js';
 import { remember } from '../session.js';
 import { relativeDate } from '../ui.js';
+import { DEMO } from '../demo.js';
+import { demoNotice } from './more.js';
 
 const openCard = (card) => {
   remember([card]);
@@ -278,10 +280,10 @@ export function render() {
       h('button', { class: 'icon-btn', 'aria-label': 'Inställningar', onClick: () => navigate('/more') }, icon('sliders')),
     );
     if (!st.items.length) {
-      mount(el, head, welcome(), wishAlerts(st), recent(st));
+      mount(el, head, DEMO && demoNotice(), welcome(), wishAlerts(st), recent(st));
       return;
     }
-    mount(el, head, valueHero(st), quickActions(st), wishAlerts(st), topValuable(st), movers(st), sets(st), recent(st));
+    mount(el, head, DEMO && demoNotice(), valueHero(st), quickActions(st), wishAlerts(st), topValuable(st), movers(st), sets(st), recent(st));
   };
   draw();
   let queued = false;

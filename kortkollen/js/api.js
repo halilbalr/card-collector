@@ -3,6 +3,7 @@
 // needs no server of its own. Everything is normalised to one card shape.
 
 import { normalizeNumber, parseSearchQuery, rankCandidates } from './ocr-parse.js';
+import { DEMO, demoPtcg, DEMO_RATES } from './demo.js';
 
 const PTCG = 'https://api.pokemontcg.io/v2';
 const DEX = 'https://api.tcgdex.net/v2/en';
@@ -99,12 +100,14 @@ async function cached(key, ttlMs, fn, persist = false) {
 }
 
 function ptcgGet(path, params = {}) {
+  if (DEMO) return demoPtcg(path, params);
   const url = new URL(PTCG + path);
   for (const [k, v] of Object.entries(params)) if (v != null && v !== '') url.searchParams.set(k, v);
   return fetchJSON(url.toString(), { headers: config.key ? { 'X-Api-Key': config.key } : {} });
 }
 
 function dexGet(path, params = {}) {
+  if (DEMO) return Promise.reject(Object.assign(new Error('TCGdex används inte i demoläget'), { status: 404 }));
   const url = new URL(DEX + path);
   for (const [k, v] of Object.entries(params)) if (v != null && v !== '') url.searchParams.set(k, v);
   return fetchJSON(url.toString(), { timeout: 15000 });
@@ -588,6 +591,7 @@ export async function identifyCard(hints) {
  * @returns {Promise<{base:string,date:string,rates:Record<string,number>}>}
  */
 export async function fetchRates() {
+  if (DEMO) return DEMO_RATES;
   const want = 'USD,SEK,NOK,DKK,GBP';
   const sources = [
     async () => {
